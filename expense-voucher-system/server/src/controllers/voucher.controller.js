@@ -325,7 +325,8 @@ const rejectVoucher = async (req, res) => {
       .update({
         status: 'rejected',
         rejection_reason: rejection_reason.trim(),
-        approved_by: req.user.id
+        approved_by: req.user.id,
+        approval_date: new Date().toISOString()
       })
       .eq('id', id)
       .select()

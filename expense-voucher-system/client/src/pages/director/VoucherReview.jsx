@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getVoucherById, approveVoucher, rejectVoucher } from '../../services/api';
+import { getVoucherById, approveVoucher, rejectVoucher, uploadSignature } from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
 import ConfirmModal from '../../components/ConfirmModal';
 import { formatDate, formatDateTime } from '../../utils/formatDate';
@@ -14,7 +14,15 @@ export default function VoucherReview() {
 
   // Approve modal
   const [showApproveModal, setShowApproveModal] = useState(false);
-  const [directorSignatureUrl, setDirectorSignatureUrl] = useState('');
+  const [dirSigFile, setDirSigFile] = useState(null);
+  const [dirSigPreview, setDirSigPreview] = useState('');
+
+  const handleDirSigFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setDirSigFile(file);
+    setDirSigPreview(URL.createObjectURL(file));
+  };
 
   // Reject modal
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -37,14 +45,14 @@ export default function VoucherReview() {
   }, [id]);
 
   const handleApprove = async () => {
-    if (!directorSignatureUrl.trim()) {
-      setError('Director signature URL is required to approve.');
-      setShowApproveModal(false);
-      return;
-    }
     setActionLoading(true);
     try {
-      await approveVoucher(id, directorSignatureUrl);
+      let sigUrl = '';
+      if (dirSigFile) {
+        const uploadRes = await uploadSignature(dirSigFile);
+        sigUrl = uploadRes.data.url;
+      }
+      await approveVoucher(id, sigUrl);
       const res = await getVoucherById(id);
       setVoucher(res.data.voucher);
       setError('');
@@ -213,15 +221,21 @@ export default function VoucherReview() {
         confirmColor="bg-green-600 hover:bg-green-700"
       >
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Director Signature (Image URL)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Director Signature <span className="text-gray-400 font-normal">(optional — upload image)</span>
+          </label>
           <input
-            type="text"
-            value={directorSignatureUrl}
-            onChange={(e) => setDirectorSignatureUrl(e.target.value)}
-            placeholder="Paste signature image URL here..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none text-sm"
+            type="file"
+            accept="image/*"
+            onChange={handleDirSigFile}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer"
           />
-          <p className="text-xs text-gray-400 mt-1">Upload via the Upload page first, then paste the URL</p>
+          {dirSigPreview && (
+            <div className="mt-3">
+              <p className="text-xs text-gray-400 mb-1">Preview:</p>
+              <img src={dirSigPreview} alt="Signature preview" className="h-16 border border-gray-200 rounded-lg p-2 bg-white object-contain" />
+            </div>
+          )}
         </div>
       </ConfirmModal>
 

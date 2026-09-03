@@ -31,7 +31,7 @@ const getStats = async (req, res) => {
     if (role === 'director') {
       const { data: vouchers, error } = await supabase
         .from('vouchers')
-        .select('status, amount, approval_date, created_at');
+        .select('status, amount, approval_date, updated_at, created_at');
 
       if (error) throw error;
 
@@ -43,7 +43,7 @@ const getStats = async (req, res) => {
           v.status === 'approved' && v.approval_date && v.approval_date.slice(0, 10) === today
         ).length,
         rejectedToday: vouchers.filter(v =>
-          v.status === 'rejected' && v.approval_date && v.approval_date.slice(0, 10) === today
+          v.status === 'rejected' && v.updated_at && v.updated_at.slice(0, 10) === today
         ).length,
         totalPendingAmount: vouchers
           .filter(v => v.status === 'pending_approval')
