@@ -169,6 +169,11 @@ export default function VoucherDetails() {
         {/* Actions for draft vouchers */}
         {isDraft && (
           <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
+            {!voucher.employee_signature && (
+              <p className="text-xs text-amber-600 self-center mr-auto">
+                ⚠ No signature uploaded. You can still submit, but add one via Edit before final approval.
+              </p>
+            )}
             <button
               onClick={() => setShowDeleteModal(true)}
               className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors cursor-pointer"
@@ -182,13 +187,7 @@ export default function VoucherDetails() {
               Edit
             </Link>
             <button
-              onClick={() => {
-                if (!voucher.employee_signature) {
-                  setError('Please upload your signature before submitting. Use the Edit page to add it.');
-                  return;
-                }
-                setShowSubmitModal(true);
-              }}
+              onClick={() => setShowSubmitModal(true)}
               className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-lg transition-colors cursor-pointer"
             >
               Submit for Approval

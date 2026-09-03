@@ -232,9 +232,6 @@ const submitVoucher = async (req, res) => {
     if (existing.status !== 'draft') {
       return res.status(400).json({ error: 'Only draft vouchers can be submitted.' });
     }
-    if (!existing.employee_signature) {
-      return res.status(400).json({ error: 'Employee signature is required before submission.' });
-    }
 
     const { data, error } = await supabase
       .from('vouchers')
@@ -260,10 +257,6 @@ const approveVoucher = async (req, res) => {
   try {
     const { id } = req.params;
     const { director_signature } = req.body;
-
-    if (!director_signature) {
-      return res.status(400).json({ error: 'Director signature is required to approve.' });
-    }
 
     const { data: existing, error: fetchError } = await supabase
       .from('vouchers')
