@@ -1,122 +1,60 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Layout from './components/Layout';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Pages
+import Login from './pages/Login';
+import EmployeeDashboard from './pages/employee/EmployeeDashboard';
+import CreateVoucher from './pages/employee/CreateVoucher';
+import MyVouchers from './pages/employee/MyVouchers';
+import EditVoucher from './pages/employee/EditVoucher';
+import EmployeeVoucherDetails from './pages/employee/VoucherDetails';
 
+import DirectorDashboard from './pages/director/DirectorDashboard';
+import PendingApprovals from './pages/director/PendingApprovals';
+import DirectorAllVouchers from './pages/director/AllVouchers';
+import VoucherReview from './pages/director/VoucherReview';
+
+import AccountsDashboard from './pages/accounts/AccountsDashboard';
+import AccountsAllVouchers from './pages/accounts/AllVouchers';
+import AccountsVoucherDetails from './pages/accounts/VoucherDetails';
+
+export default function App() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
 
-      <div className="ticks"></div>
+          {/* Employee Routes */}
+          <Route element={<ProtectedRoute allowedRoles={['employee']}><Layout /></ProtectedRoute>}>
+            <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
+            <Route path="/employee/create-voucher" element={<CreateVoucher />} />
+            <Route path="/employee/my-vouchers" element={<MyVouchers />} />
+            <Route path="/employee/voucher/:id" element={<EmployeeVoucherDetails />} />
+            <Route path="/employee/edit-voucher/:id" element={<EditVoucher />} />
+          </Route>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+          {/* Director Routes */}
+          <Route element={<ProtectedRoute allowedRoles={['director']}><Layout /></ProtectedRoute>}>
+            <Route path="/director/dashboard" element={<DirectorDashboard />} />
+            <Route path="/director/pending-approvals" element={<PendingApprovals />} />
+            <Route path="/director/all-vouchers" element={<DirectorAllVouchers />} />
+            <Route path="/director/voucher/:id" element={<VoucherReview />} />
+          </Route>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          {/* Accounts Routes */}
+          <Route element={<ProtectedRoute allowedRoles={['accounts']}><Layout /></ProtectedRoute>}>
+            <Route path="/accounts/dashboard" element={<AccountsDashboard />} />
+            <Route path="/accounts/all-vouchers" element={<AccountsAllVouchers />} />
+            <Route path="/accounts/voucher/:id" element={<AccountsVoucherDetails />} />
+          </Route>
+
+          {/* Default redirect */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  );
 }
-
-export default App
