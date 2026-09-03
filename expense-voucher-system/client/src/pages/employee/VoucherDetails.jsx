@@ -173,13 +173,13 @@ export default function VoucherDetails() {
               onClick={() => setShowDeleteModal(true)}
               className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors cursor-pointer"
             >
-              🗑 Delete
+              Delete
             </button>
             <Link
               to={`/employee/edit-voucher/${voucher.id}`}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              ✏️ Edit
+              Edit
             </Link>
             <button
               onClick={() => {
@@ -191,7 +191,7 @@ export default function VoucherDetails() {
               }}
               className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-lg transition-colors cursor-pointer"
             >
-              🚀 Submit for Approval
+              Submit for Approval
             </button>
           </div>
         )}

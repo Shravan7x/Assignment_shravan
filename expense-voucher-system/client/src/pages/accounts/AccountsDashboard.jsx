@@ -36,11 +36,11 @@ export default function AccountsDashboard() {
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Accounts Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-        <StatsCard title="Total Vouchers" value={stats?.total || 0} icon="📋" />
-        <StatsCard title="Pending" value={stats?.pending || 0} icon="⏳" color="text-amber-600" />
-        <StatsCard title="Approved" value={stats?.approved || 0} icon="✅" color="text-green-600" />
-        <StatsCard title="Rejected" value={stats?.rejected || 0} icon="❌" color="text-red-600" />
-        <StatsCard title="Approved Amount" value={formatCurrency(stats?.totalApprovedAmount || 0)} icon="💰" color="text-green-600" />
+        <StatsCard title="Total Vouchers" value={stats?.total || 0} icon="" />
+        <StatsCard title="Pending" value={stats?.pending || 0} icon="" color="text-amber-600" />
+        <StatsCard title="Approved" value={stats?.approved || 0} icon="" color="text-green-600" />
+        <StatsCard title="Rejected" value={stats?.rejected || 0} icon="" color="text-red-600" />
+        <StatsCard title="Approved Amount" value={formatCurrency(stats?.totalApprovedAmount || 0)} icon="" color="text-green-600" />
       </div>
 
       <div>

@@ -15,7 +15,7 @@ export default function Sidebar() {
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen p-4 flex flex-col">
       {/* Logo */}
       <div className="mb-8 px-2">
-        <h1 className="text-xl font-bold text-gray-900">💼 ExpenseFlow</h1>
+        <h1 className="text-xl font-bold text-gray-900">ExpenseFlow</h1>
         <p className="text-xs text-gray-500 mt-1">Voucher Management</p>
       </div>
 
@@ -24,13 +24,13 @@ export default function Sidebar() {
         {user?.role === 'employee' && (
           <>
             <NavLink to="/employee/dashboard" className={linkClass}>
-              📊 Dashboard
+              Dashboard
             </NavLink>
             <NavLink to="/employee/create-voucher" className={linkClass}>
-              ➕ Create Voucher
+              Create Voucher
             </NavLink>
             <NavLink to="/employee/my-vouchers" className={linkClass}>
-              📋 My Vouchers
+              My Vouchers
             </NavLink>
           </>
         )}
@@ -38,13 +38,13 @@ export default function Sidebar() {
         {user?.role === 'director' && (
           <>
             <NavLink to="/director/dashboard" className={linkClass}>
-              📊 Dashboard
+              Dashboard
             </NavLink>
             <NavLink to="/director/pending-approvals" className={linkClass}>
-              ⏳ Pending Approvals
+              Pending Approvals
             </NavLink>
             <NavLink to="/director/all-vouchers" className={linkClass}>
-              📋 All Vouchers
+              All Vouchers
             </NavLink>
           </>
         )}
@@ -52,10 +52,10 @@ export default function Sidebar() {
         {user?.role === 'accounts' && (
           <>
             <NavLink to="/accounts/dashboard" className={linkClass}>
-              📊 Dashboard
+              Dashboard
             </NavLink>
             <NavLink to="/accounts/all-vouchers" className={linkClass}>
-              📋 All Vouchers
+              All Vouchers
             </NavLink>
           </>
         )}

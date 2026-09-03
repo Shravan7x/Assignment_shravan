@@ -20,7 +20,9 @@ const getStats = async (req, res) => {
         pending: vouchers.filter(v => v.status === 'pending_approval').length,
         approved: vouchers.filter(v => v.status === 'approved').length,
         rejected: vouchers.filter(v => v.status === 'rejected').length,
-        totalAmount: vouchers.reduce((sum, v) => sum + parseFloat(v.amount), 0)
+        totalAmount: vouchers
+          .filter(v => v.status === 'approved')
+          .reduce((sum, v) => sum + parseFloat(v.amount), 0)
       };
 
       return res.json({ stats });
