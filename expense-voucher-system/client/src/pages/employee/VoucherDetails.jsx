@@ -53,6 +53,11 @@ export default function VoucherDetails() {
   };
 
   const handleSubmit = async () => {
+    if (!voucher.employee_signature) {
+      setError('You must upload your signature via Edit before submitting.');
+      setShowSubmitModal(false);
+      return;
+    }
     setActionLoading(true);
     try {
       await submitVoucher(id);

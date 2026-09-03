@@ -49,11 +49,14 @@ export default function PendingApprovals() {
   const handleApprove = async () => {
     setActionLoading(true);
     try {
-      let sigUrl = '';
-      if (dirSigFile) {
-        const uploadRes = await uploadSignature(dirSigFile);
-        sigUrl = uploadRes.data.url;
+      if (!dirSigFile) {
+        setError('Director signature image is required to approve.');
+        setActionLoading(false);
+        return;
       }
+      const uploadRes = await uploadSignature(dirSigFile);
+      const sigUrl = uploadRes.data.url;
+      
       await approveVoucher(approveTarget.id, sigUrl);
       setApproveTarget(null);
       setDirSigFile(null);
@@ -182,7 +185,7 @@ export default function PendingApprovals() {
       >
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Director Signature <span className="text-gray-400 font-normal">(optional — upload image)</span>
+            Director Signature <span className="text-red-500 font-normal">(required — upload image)</span>
           </label>
           <input
             type="file"
