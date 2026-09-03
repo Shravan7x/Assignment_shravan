@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getVoucherById, updateVoucher } from '../../services/api';
+import { getVoucherById, updateVoucher, uploadSignature } from '../../services/api';
 
 const CATEGORIES = ['Travel', 'Food', 'Office Supplies', 'Software', 'Equipment', 'Training', 'Other'];
 
@@ -85,9 +85,6 @@ export default function EditVoucher() {
 
       // If a new file was chosen, upload it to Supabase via our API
       if (sigFile) {
-        const fd = new FormData();
-        fd.append('signature', sigFile);
-        const { uploadSignature } = await import('../../services/api');
         const uploadRes = await uploadSignature(sigFile);
         signatureUrl = uploadRes.data.url;
       }

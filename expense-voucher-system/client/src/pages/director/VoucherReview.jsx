@@ -1,13 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
 import { getVoucherById, approveVoucher, rejectVoucher, uploadSignature } from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
 import ConfirmModal from '../../components/ConfirmModal';
+import PrintableVoucher from '../../components/PrintableVoucher';
 import { formatDate, formatDateTime } from '../../utils/formatDate';
 import { formatCurrency } from '../../utils/formatCurrency';
 
 export default function VoucherReview() {
   const { id } = useParams();
+  const printRef = useRef();
   const [voucher, setVoucher] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -94,9 +97,27 @@ export default function VoucherReview() {
 
   const isPending = voucher.status === 'pending_approval';
 
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: `Voucher-${voucher.voucher_number}`
+  });
+
   return (
     <div className="max-w-3xl mx-auto">
-      <Link to="/director/pending-approvals" className="text-sm text-primary hover:underline mb-4 inline-block">← Back to Vouchers</Link>
+      <div className="flex items-center justify-between mb-4">
+        <Link to="/director/pending-approvals" className="text-sm text-primary hover:underline">← Back to Vouchers</Link>
+        <button
+          onClick={handlePrint}
+          className="px-4 py-2 text-sm font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors cursor-pointer"
+        >
+          Print / Download PDF
+        </button>
+      </div>
+
+      {/* Hidden printable voucher */}
+      <div className="hidden print:block">
+        <PrintableVoucher ref={printRef} voucher={voucher} />
+      </div>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">{error}</div>

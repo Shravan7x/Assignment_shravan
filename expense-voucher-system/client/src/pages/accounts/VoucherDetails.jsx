@@ -1,14 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
 import { getVoucherById } from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
+import PrintableVoucher from '../../components/PrintableVoucher';
 import { formatDate, formatDateTime } from '../../utils/formatDate';
 import { formatCurrency } from '../../utils/formatCurrency';
 
 export default function VoucherDetails() {
   const { id } = useParams();
+  const printRef = useRef();
   const [voucher, setVoucher] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Must be called at component level, not inside onClick
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: voucher ? `Voucher-${voucher.voucher_number}` : 'Voucher'
+  });
 
   useEffect(() => {
     async function fetchVoucher() {
@@ -34,7 +43,20 @@ export default function VoucherDetails() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <Link to="/accounts/all-vouchers" className="text-sm text-primary hover:underline mb-4 inline-block">← Back to All Vouchers</Link>
+      <div className="flex items-center justify-between mb-4">
+        <Link to="/accounts/all-vouchers" className="text-sm text-primary hover:underline">← Back to All Vouchers</Link>
+        <button
+          onClick={handlePrint}
+          className="px-4 py-2 text-sm font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors cursor-pointer"
+        >
+          Print / Download PDF
+        </button>
+      </div>
+
+      {/* Hidden printable voucher */}
+      <div className="hidden print:block">
+        <PrintableVoucher ref={printRef} voucher={voucher} />
+      </div>
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
         {/* Header */}
