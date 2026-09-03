@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const authenticate = require('../middleware/auth');
+const { upload, uploadSignature } = require('../controllers/upload.controller');
 
-// Placeholder - will be built in Step 5
-router.get('/', (req, res) => {
-  res.json({ message: 'Upload routes coming soon' });
-});
+// POST /api/upload/signature — authenticated, single file
+router.post('/signature', authenticate, upload.single('signature'), uploadSignature);
 
 module.exports = router;

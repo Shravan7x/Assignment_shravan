@@ -21,6 +21,17 @@ export default function EditVoucher() {
     employee_signature: ''
   });
 
+  // Signature file handling
+  const [sigFile, setSigFile] = useState(null);
+  const [sigPreview, setSigPreview] = useState('');
+
+  const handleSigFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setSigFile(file);
+    setSigPreview(URL.createObjectURL(file));
+  };
+
   useEffect(() => {
     async function fetchVoucher() {
       try {
@@ -70,7 +81,18 @@ export default function EditVoucher() {
 
     setSaving(true);
     try {
-      await updateVoucher(id, { ...form, amount: parseFloat(form.amount) });
+      let signatureUrl = form.employee_signature;
+
+      // If a new file was chosen, upload it to Supabase via our API
+      if (sigFile) {
+        const fd = new FormData();
+        fd.append('signature', sigFile);
+        const { uploadSignature } = await import('../../services/api');
+        const uploadRes = await uploadSignature(sigFile);
+        signatureUrl = uploadRes.data.url;
+      }
+
+      await updateVoucher(id, { ...form, amount: parseFloat(form.amount), employee_signature: signatureUrl });
       navigate(`/employee/voucher/${id}`);
     } catch (err) {
       setErrors({ form: err.response?.data?.error || 'Failed to update voucher.' });
@@ -144,6 +166,34 @@ export default function EditVoucher() {
           <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
           <textarea name="expense_description" value={form.expense_description} onChange={handleChange} rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm resize-none" />
+        </div>
+
+        {/* Employee Signature */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Employee Signature <span className="text-red-500">*</span>
+            <span className="text-gray-400 font-normal ml-1">(required before submission)</span>
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleSigFileChange}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+          />
+          {/* Preview */}
+          {(sigPreview || form.employee_signature) && (
+            <div className="mt-3">
+              <p className="text-xs text-gray-400 mb-1">Preview:</p>
+              <img
+                src={sigPreview || form.employee_signature}
+                alt="Signature preview"
+                className="h-20 border border-gray-200 rounded-lg p-2 bg-white object-contain"
+              />
+            </div>
+          )}
+          {!sigPreview && !form.employee_signature && (
+            <p className="text-xs text-amber-600 mt-1">No signature uploaded yet. You must add one before submitting.</p>
+          )}
         </div>
 
         <div className="flex justify-end gap-3 pt-2">

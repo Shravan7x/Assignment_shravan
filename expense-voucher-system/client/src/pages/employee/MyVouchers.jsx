@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 import { getVouchers } from '../../services/api';
 import VoucherTable from '../../components/VoucherTable';
+import SearchFilterBar from '../../components/SearchFilterBar';
 
 export default function MyVouchers() {
-  const [vouchers, setVouchers] = useState([]);
+  const [allVouchers, setAllVouchers] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchVouchers() {
       try {
         const res = await getVouchers();
-        setVouchers(res.data.vouchers);
+        setAllVouchers(res.data.vouchers);
+        setFiltered(res.data.vouchers);
       } catch (err) {
         console.error('Fetch vouchers error:', err);
       } finally {
@@ -21,13 +24,15 @@ export default function MyVouchers() {
   }, []);
 
   if (loading) {
-    return <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div></div>;
+    return <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div></div>;
   }
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">My Vouchers</h1>
-      <VoucherTable vouchers={vouchers} basePath="/employee/voucher" />
+      <SearchFilterBar vouchers={allVouchers} onFiltered={setFiltered} />
+      <p className="text-sm text-gray-400 mb-2">{filtered.length} voucher(s) found</p>
+      <VoucherTable vouchers={filtered} basePath="/employee/voucher" />
     </div>
   );
 }

@@ -46,12 +46,12 @@ export default function EmployeeDashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-        <StatsCard title="Total" value={stats?.total || 0} icon="" />
-        <StatsCard title="Draft" value={stats?.draft || 0} icon="" color="text-gray-600" />
-        <StatsCard title="Pending" value={stats?.pending || 0} icon="" color="text-amber-600" />
-        <StatsCard title="Approved" value={stats?.approved || 0} icon="" color="text-green-600" />
-        <StatsCard title="Rejected" value={stats?.rejected || 0} icon="" color="text-red-600" />
-        <StatsCard title="Total Claimed" value={formatCurrency(stats?.totalAmount || 0)} icon="" color="text-primary" />
+        <StatsCard title="Total Vouchers" value={stats?.total || 0} />
+        <StatsCard title="Draft" value={stats?.draft || 0} color="text-gray-500" />
+        <StatsCard title="Pending Approval" value={stats?.pending || 0} color="text-amber-600" />
+        <StatsCard title="Approved" value={stats?.approved || 0} color="text-green-600" />
+        <StatsCard title="Rejected" value={stats?.rejected || 0} color="text-red-600" />
+        <StatsCard title="Total Approved Amount" value={formatCurrency(stats?.totalAmount || 0)} color="text-indigo-600" />
       </div>
 
       {/* Recent Vouchers */}
