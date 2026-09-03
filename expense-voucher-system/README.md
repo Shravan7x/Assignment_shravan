@@ -110,7 +110,8 @@ The database consists of two core tables: `users` and `vouchers`.
 
 ## 🤔 Assumptions Made During Development
 
-1. **Authentication Security**: Since user creation was not a strict requirement for the scope of the assignment, passwords are provided in plain text via the `schema.sql` seed to simplify the review process. In a real-world scenario, passwords would be hashed using `bcrypt` and managed through a secure registration/reset flow.
-2. **Signature Storage**: Signatures are uploaded as image files rather than using a canvas drawing tool. They are securely uploaded via the backend using Multer memory storage and passed directly to Supabase Storage, returning a public URL.
-3. **Draft Privacy**: Drafts are considered entirely private to the employee until submitted. Directors and Accounts users cannot see drafts in their tables or statistics.
-4. **Dates and Timestamps**: All dates are managed using ISO 8601 strings to ensure frontend and backend compatibility, avoiding time-zone drift issues.
+1. **Authentication & User Provisioning**: There is no public "Signup" page for employees. In typical internal enterprise applications (like an expense management system), employee accounts are provisioned centrally by IT or HR, not via self-registration. Passwords in the seed file are provided for demo purposes, but in production, they are hashed using `bcrypt` and managed through secure internal flows.
+2. **Session Management (JWT)**: JSON Web Tokens (JWT) are used for stateless authentication. The JWT session is explicitly configured with a **24-hour expiration time** (`expiresIn: '24h'`) to enforce session timeouts and improve security.
+3. **Signature Storage**: Signatures are uploaded as image files rather than using a canvas drawing tool. They are securely uploaded via the backend using Multer memory storage and passed directly to Supabase Storage, returning a public URL.
+4. **Draft Privacy**: Drafts are considered entirely private to the employee until submitted. Directors and Accounts users cannot see drafts in their tables or statistics.
+5. **Dates and Timestamps**: All dates are managed using ISO 8601 strings to ensure frontend and backend compatibility, avoiding time-zone drift issues.

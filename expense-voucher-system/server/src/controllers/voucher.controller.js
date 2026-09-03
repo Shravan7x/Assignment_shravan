@@ -48,7 +48,6 @@ const createVoucher = async (req, res) => {
   }
 };
 
-// GET /api/vouchers — List vouchers (scoped by role)
 const getAllVouchers = async (req, res) => {
   try {
     let query = supabase
@@ -211,7 +210,6 @@ const deleteVoucher = async (req, res) => {
   }
 };
 
-// PATCH /api/vouchers/:id/submit — Submit a draft voucher
 const submitVoucher = async (req, res) => {
   try {
     const { id } = req.params;
@@ -255,7 +253,6 @@ const submitVoucher = async (req, res) => {
   }
 };
 
-// PATCH /api/vouchers/:id/approve — Director approves a voucher
 const approveVoucher = async (req, res) => {
   try {
     const { id } = req.params;
@@ -303,7 +300,6 @@ const approveVoucher = async (req, res) => {
   }
 };
 
-// PATCH /api/vouchers/:id/reject — Director rejects a voucher
 const rejectVoucher = async (req, res) => {
   try {
     const { id } = req.params;

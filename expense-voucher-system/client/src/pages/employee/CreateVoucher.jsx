@@ -102,7 +102,6 @@ export default function CreateVoucher() {
       )}
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
-        {/* Row 1: Title & Category */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Expense Title *</label>
@@ -131,7 +130,6 @@ export default function CreateVoucher() {
           </div>
         </div>
 
-        {/* Row 2: Department & Amount */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Department *</label>
@@ -161,7 +159,6 @@ export default function CreateVoucher() {
           </div>
         </div>
 
-        {/* Row 3: Dates */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Expense Date *</label>
@@ -186,7 +183,6 @@ export default function CreateVoucher() {
           </div>
         </div>
 
-        {/* Description */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Description (Optional)</label>
           <textarea
@@ -199,7 +195,6 @@ export default function CreateVoucher() {
           />
         </div>
 
-        {/* Row 5: Signature */}
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -215,7 +210,6 @@ export default function CreateVoucher() {
           </div>
         </div>
 
-        {/* Buttons */}
         <div className="flex justify-end gap-3 pt-2">
           <button
             onClick={() => navigate('/employee/my-vouchers')}
