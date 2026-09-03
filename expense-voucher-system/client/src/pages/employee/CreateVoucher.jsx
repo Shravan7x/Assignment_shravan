@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createVoucher } from '../../services/api';
+import { createVoucher, submitVoucher, uploadSignature } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
 const CATEGORIES = ['Travel', 'Food', 'Office Supplies', 'Software', 'Equipment', 'Training', 'Other'];
@@ -10,6 +10,7 @@ export default function CreateVoucher() {
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
+  const [sigFile, setSigFile] = useState(null);
   const [form, setForm] = useState({
     expense_title: '',
     expense_category: '',
@@ -36,8 +37,8 @@ export default function CreateVoucher() {
     if (!form.expense_date) newErrors.expense_date = 'Expense date is required';
     if (!form.expense_category) newErrors.expense_category = 'Category is required';
     if (!form.amount || parseFloat(form.amount) <= 0) newErrors.amount = 'Amount must be greater than zero';
-    if (isSubmit && !form.employee_signature) {
-      newErrors.employee_signature = 'Signature is required before submission';
+    if (isSubmit && !sigFile && !form.employee_signature) {
+      newErrors.employee_signature = 'Signature image is required before submission';
     }
     return newErrors;
   };
@@ -51,7 +52,12 @@ export default function CreateVoucher() {
 
     setSaving(true);
     try {
-      await createVoucher(form);
+      let finalForm = { ...form };
+      if (sigFile) {
+        const uploadRes = await uploadSignature(sigFile);
+        finalForm.employee_signature = uploadRes.data.url;
+      }
+      await createVoucher(finalForm);
       navigate('/employee/my-vouchers');
     } catch (err) {
       setErrors({ form: err.response?.data?.error || 'Failed to save voucher.' });
@@ -66,7 +72,23 @@ export default function CreateVoucher() {
       setErrors(validationErrors);
       return;
     }
-    setErrors({ form: 'Please save as draft first, upload your signature, then submit from the voucher details page.' });
+
+    setSaving(true);
+    try {
+      let finalForm = { ...form };
+      if (sigFile) {
+        const uploadRes = await uploadSignature(sigFile);
+        finalForm.employee_signature = uploadRes.data.url;
+      }
+      const createRes = await createVoucher(finalForm);
+      const newVoucherId = createRes.data.voucher.id;
+      await submitVoucher(newVoucherId);
+      navigate('/employee/my-vouchers');
+    } catch (err) {
+      setErrors({ form: err.response?.data?.error || 'Failed to submit voucher.' });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -166,15 +188,31 @@ export default function CreateVoucher() {
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Description (Optional)</label>
           <textarea
             name="expense_description"
             value={form.expense_description}
             onChange={handleChange}
             rows={3}
-            placeholder="Brief description of the expense..."
+            placeholder="Provide any additional details..."
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm resize-none"
           />
+        </div>
+
+        {/* Row 5: Signature */}
+        <div className="grid grid-cols-1 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Employee Signature <span className="text-gray-400 font-normal">(required for submission)</span>
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setSigFile(e.target.files[0])}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm bg-white"
+            />
+            {errors.employee_signature && <p className="text-red-500 text-xs mt-1">{errors.employee_signature}</p>}
+          </div>
         </div>
 
         {/* Buttons */}
