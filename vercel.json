@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/expense-voucher-system/client/index.html"
+    }
+  ]
+}

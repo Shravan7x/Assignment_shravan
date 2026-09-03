@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -22,7 +22,7 @@ import AccountsVoucherDetails from './pages/accounts/VoucherDetails';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -55,6 +55,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </AuthProvider>
-    </BrowserRouter>
+    </Router>
   );
 }
