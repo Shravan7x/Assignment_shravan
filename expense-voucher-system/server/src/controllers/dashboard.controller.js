@@ -31,7 +31,8 @@ const getStats = async (req, res) => {
     if (role === 'director') {
       const { data: vouchers, error } = await supabase
         .from('vouchers')
-        .select('status, amount, approval_date, updated_at, created_at');
+        .select('status, amount, approval_date, updated_at, created_at')
+        .neq('status', 'draft');
 
       if (error) throw error;
 
@@ -57,7 +58,8 @@ const getStats = async (req, res) => {
     if (role === 'accounts') {
       const { data: vouchers, error } = await supabase
         .from('vouchers')
-        .select('status, amount');
+        .select('status, amount')
+        .neq('status', 'draft');
 
       if (error) throw error;
 

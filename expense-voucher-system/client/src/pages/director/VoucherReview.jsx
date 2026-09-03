@@ -15,6 +15,11 @@ export default function VoucherReview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: voucher ? `Voucher-${voucher.voucher_number}` : 'Voucher'
+  });
+
   // Approve modal
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [dirSigFile, setDirSigFile] = useState(null);
@@ -96,11 +101,6 @@ export default function VoucherReview() {
   }
 
   const isPending = voucher.status === 'pending_approval';
-
-  const handlePrint = useReactToPrint({
-    contentRef: printRef,
-    documentTitle: `Voucher-${voucher.voucher_number}`
-  });
 
   return (
     <div className="max-w-3xl mx-auto">

@@ -19,6 +19,11 @@ export default function VoucherDetails() {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: voucher ? `Voucher-${voucher.voucher_number}` : 'Voucher'
+  });
+
   useEffect(() => {
     async function fetchVoucher() {
       try {
@@ -70,11 +75,6 @@ export default function VoucherDetails() {
   }
 
   const isDraft = voucher.status === 'draft';
-
-  const handlePrint = useReactToPrint({
-    contentRef: printRef,
-    documentTitle: `Voucher-${voucher.voucher_number}`
-  });
 
   return (
     <div className="max-w-3xl mx-auto">
