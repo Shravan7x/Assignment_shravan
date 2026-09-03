@@ -190,7 +190,7 @@ export default function CreateVoucher() {
             disabled={saving}
             className="px-5 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
           >
-            {saving ? 'Saving...' : '📝 Save as Draft'}
+            {saving ? 'Saving...' : 'Save as Draft'}
           </button>
         </div>
       </div>

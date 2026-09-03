@@ -9,7 +9,7 @@ export default function VoucherTable({ vouchers, basePath, showEmployee = false 
   if (!vouchers || vouchers.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-gray-200 p-10 text-center">
-        <p className="text-gray-400 text-lg">📭 No vouchers found</p>
+        <p className="text-gray-400 text-lg">No vouchers found</p>
       </div>
     );
   }

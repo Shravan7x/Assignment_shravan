@@ -190,13 +190,13 @@ export default function VoucherReview() {
               onClick={() => setShowRejectModal(true)}
               className="px-5 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors cursor-pointer"
             >
-              ❌ Reject
+              Reject
             </button>
             <button
               onClick={() => setShowApproveModal(true)}
               className="px-5 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors cursor-pointer"
             >
-              ✅ Approve
+              Approve
             </button>
           </div>
         )}
